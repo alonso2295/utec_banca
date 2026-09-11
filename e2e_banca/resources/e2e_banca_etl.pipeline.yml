@@ -1,0 +1,62 @@
+
+
+resources:
+  pipelines:
+    pipeline_pip_banca_src_to_bronze:
+      name: pipeline_pip_banca_src_to_bronze
+      ingestion_definition:
+        connection_name: utec_conn
+        objects:
+          - table:
+              source_catalog: postgres
+              source_schema: public
+              source_table: cliente
+              destination_catalog: bronze
+              destination_schema: sch_app_utecbanca_tb
+              table_configuration:
+                scd_type: SCD_TYPE_2
+                primary_keys:
+                  - cliente_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - fec_modificacion
+          - table:
+              source_catalog: postgres
+              source_schema: public
+              source_table: cuenta
+              destination_catalog: bronze
+              destination_schema: sch_app_utecbanca_tb
+              table_configuration:
+                primary_keys:
+                  - cuenta_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - fec_modificacion
+          - table:
+              source_catalog: postgres
+              source_schema: public
+              source_table: prestamo
+              destination_catalog: bronze
+              destination_schema: sch_app_utecbanca_tb
+              table_configuration:
+                primary_keys:
+                  - prestamo_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - fec_modificacion
+          - table:
+              source_catalog: postgres
+              source_schema: public
+              source_table: cuota
+              destination_catalog: bronze
+              destination_schema: sch_app_utecbanca_tb
+              table_configuration:
+                primary_keys:
+                  - cuota_id
+                query_based_connector_config:
+                  cursor_columns:
+                    - fec_modificacion
+        source_type: POSTGRESQL
+      schema: sch_app_utecbanca_tb
+      channel: PREVIEW
+      catalog: bronze

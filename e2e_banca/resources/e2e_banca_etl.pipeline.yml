@@ -2,16 +2,16 @@
 
 resources:
   pipelines:
-    pipeline_pip_banca_src_to_bronze:
-      name: pipeline_pip_banca_src_to_bronze
+    pipeline_pip_banca_src_to_raw:
+      name: pipeline_pip_banca_src_to_raw
       ingestion_definition:
-        connection_name: utec_conn
+        connection_name: cn_utec_banca
         objects:
           - table:
               source_catalog: postgres
               source_schema: public
               source_table: cliente
-              destination_catalog: bronze
+              destination_catalog: raw
               destination_schema: sch_app_utecbanca_tb
               table_configuration:
                 scd_type: SCD_TYPE_2
@@ -24,7 +24,7 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: cuenta
-              destination_catalog: bronze
+              destination_catalog: raw
               destination_schema: sch_app_utecbanca_tb
               table_configuration:
                 primary_keys:
@@ -36,7 +36,7 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: prestamo
-              destination_catalog: bronze
+              destination_catalog: raw
               destination_schema: sch_app_utecbanca_tb
               table_configuration:
                 primary_keys:
@@ -48,7 +48,7 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: cuota
-              destination_catalog: bronze
+              destination_catalog: raw
               destination_schema: sch_app_utecbanca_tb
               table_configuration:
                 primary_keys:
@@ -59,4 +59,4 @@ resources:
         source_type: POSTGRESQL
       schema: sch_app_utecbanca_tb
       channel: PREVIEW
-      catalog: bronze
+      catalog: raw

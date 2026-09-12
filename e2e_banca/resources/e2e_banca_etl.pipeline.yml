@@ -1,9 +1,7 @@
-
-
 resources:
   pipelines:
-    pipeline_pip_banca_src_to_raw:
-      name: pipeline_pip_banca_src_to_raw
+    pip_core_banca_to_bronze:
+      name: pip_core_banca_to_bronze
       ingestion_definition:
         connection_name: cn_utec_banca
         objects:
@@ -11,8 +9,8 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: cliente
-              destination_catalog: raw
-              destination_schema: sch_app_utecbanca_tb
+              destination_catalog: dev_bronze
+              destination_schema: core_banca
               table_configuration:
                 scd_type: SCD_TYPE_2
                 primary_keys:
@@ -24,8 +22,8 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: cuenta
-              destination_catalog: raw
-              destination_schema: sch_app_utecbanca_tb
+              destination_catalog: dev_bronze
+              destination_schema: core_banca
               table_configuration:
                 primary_keys:
                   - cuenta_id
@@ -36,9 +34,10 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: prestamo
-              destination_catalog: raw
-              destination_schema: sch_app_utecbanca_tb
+              destination_catalog: dev_bronze
+              destination_schema: core_banca
               table_configuration:
+                scd_type: SCD_TYPE_2
                 primary_keys:
                   - prestamo_id
                 query_based_connector_config:
@@ -48,8 +47,8 @@ resources:
               source_catalog: postgres
               source_schema: public
               source_table: cuota
-              destination_catalog: raw
-              destination_schema: sch_app_utecbanca_tb
+              destination_catalog: dev_bronze
+              destination_schema: core_banca
               table_configuration:
                 primary_keys:
                   - cuota_id
@@ -57,6 +56,6 @@ resources:
                   cursor_columns:
                     - fec_modificacion
         source_type: POSTGRESQL
-      schema: sch_app_utecbanca_tb
+      schema: core_banca
       channel: PREVIEW
-      catalog: raw
+      catalog: dev_bronze

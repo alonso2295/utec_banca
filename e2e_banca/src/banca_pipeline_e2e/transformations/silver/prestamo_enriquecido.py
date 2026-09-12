@@ -13,15 +13,15 @@ GOLD_CATALOG = spark.conf.get("gold_catalog")
 
 
 @dp.materialized_view(
-    name=f"{SILVER_CATALOG}.sch_app_utecbanca_tb.h_prestamo",
+    name=f"{SILVER_CATALOG}.creditos.h_prestamo",
     comment="Historico de prestamos enriquecido con producto"
 )
 def h_prestamo():
 
-    prestamo = spark.read.table(f"{BRONZE_CATALOG}.sch_app_utecbanca_tb.prestamo")
+    prestamo = spark.read.table(f"{BRONZE_CATALOG}.core_banca.prestamo")
 
     producto = spark.read.table(
-        f"{SILVER_CATALOG}.sch_catalogos_tb.m_producto_prestamo"
+        f"{SILVER_CATALOG}.catalogos.m_producto"
     )
 
     return (
@@ -53,19 +53,19 @@ def h_prestamo():
 ## Tabla con el ultimo estado de los registro de prestamo
 ##########################################################
 @dp.materialized_view(
-    name=f"{SILVER_CATALOG}.sch_app_utecbanca_tb.m_prestamo",
+    name=f"{SILVER_CATALOG}.creditos.m_prestamo",
     comment="Estado actual de prestamos enriquecido con producto"
 )
 def m_prestamo():
 
     prestamo = (
-        spark.read.table(f"{BRONZE_CATALOG}.sch_app_utecbanca_tb.prestamo")
+        spark.read.table(f"{BRONZE_CATALOG}.core_banca.prestamo")
         .filter(F.col("__END_AT").isNull())
         .alias("p")
     )
 
     producto = (
-        spark.read.table(f"{SILVER_CATALOG}.sch_catalogos_tb.m_producto_prestamo")
+        spark.read.table(f"{SILVER_CATALOG}.catalogos.m_producto")
         .alias("prd")
     )
 

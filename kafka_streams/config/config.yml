@@ -1,0 +1,106 @@
+environments:
+  dev:
+    kafka:
+      bootstrap_servers: "kafka-utec-pe-01-utec-data.b.aivencloud.com:28780"
+      security_protocol: "SASL_SSL"
+      sasl_mechanism: "SCRAM-SHA-256"
+      sasl_login_module: "kafkashaded.org.apache.kafka.common.security.scram.ScramLoginModule"
+      username: "avnadmin"
+      password_secret:
+        catalog: "dev_bronze"
+        schema: "kafka_streams"
+        key: "KAFKA_SASL_PASSWORD"
+      ca_certificate_secret:
+        catalog: "dev_bronze"
+        schema: "kafka_streams"
+        key: "KAFKA_CA_CERTIFICATE_PEM"
+
+    schema_registry:
+      url: "https://kafka-utec-pe-01-utec-data.b.aivencloud.com:28772"
+      username: "avnadmin"
+      password_secret:
+        catalog: "dev_bronze"
+        schema: "kafka_streams"
+        key: "SCHEMA_REGISTRY_PASSWORD"
+
+    storage:
+      catalog: "dev_bronze"
+      schema: "kafka_streams"
+      checkpoint_base: "/Volumes/dev_bronze/kafka_streams/vol_streams/checkpoints"
+
+    defaults:
+      starting_offsets: "earliest"
+      max_offsets_per_trigger: 1000
+      fail_on_data_loss: false
+      output_mode: "append"
+      merge_schema: true
+      avro:
+        mode: "FAILFAST"
+        schema_evolution_mode: "restart"
+      trigger:
+        type: "processing_time"
+        interval: "15 seconds"
+
+  prod:
+    kafka:
+      bootstrap_servers: "REEMPLAZAR_HOST_PROD:9093"
+      security_protocol: "SASL_SSL"
+      sasl_mechanism: "SCRAM-SHA-256"
+      sasl_login_module: "kafkashaded.org.apache.kafka.common.security.scram.ScramLoginModule"
+      username: "REEMPLAZAR_USUARIO_PROD"
+      password_secret:
+        catalog: "prod_bronze"
+        schema: "kafka_streams"
+        key: "KAFKA_SASL_PASSWORD"
+      ca_certificate_secret:
+        catalog: "prod_bronze"
+        schema: "kafka_streams"
+        key: "KAFKA_CA_CERTIFICATE_PEM"
+
+    schema_registry:
+      url: "https://REEMPLAZAR_SCHEMA_REGISTRY_PROD"
+      username: "REEMPLAZAR_USUARIO_PROD"
+      password_secret:
+        catalog: "prod_bronze"
+        schema: "kafka_streams"
+        key: "SCHEMA_REGISTRY_PASSWORD"
+
+    storage:
+      catalog: "prod_bronze"
+      schema: "kafka_streams"
+      checkpoint_base: "/Volumes/prod_bronze/kafka_streams/vol_streams/checkpoints"
+
+    defaults:
+      starting_offsets: "latest"
+      max_offsets_per_trigger: 5000
+      fail_on_data_loss: true
+      output_mode: "append"
+      merge_schema: true
+      avro:
+        mode: "FAILFAST"
+        schema_evolution_mode: "restart"
+      trigger:
+        type: "processing_time"
+        interval: "15 seconds"
+
+topics:
+  banco.pagos:
+    enabled: true
+    serialization: "avro"
+    target_table: "banco_pagos"
+    query_name: "bronze_banco_pagos_kafka"
+    key_alias: "prestamo_key"
+    # Si se omite, se utiliza automáticamente banco.pagos-value.
+    subject: "banco.pagos-value"
+    max_offsets_per_trigger: 1000
+    trigger:
+      type: "processing_time"
+      interval: "15 seconds"
+
+  # Para agregar un tópico, copiar este bloque y cambiar sus valores.
+  # banco.transferencias:
+  #   enabled: true
+  #   serialization: "avro"
+  #   target_table: "banco_transferencias"
+  #   key_alias: "transferencia_key"
+  #   max_offsets_per_trigger: 2000

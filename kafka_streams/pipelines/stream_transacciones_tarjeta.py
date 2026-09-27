@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Ingesta reutilizable Kafka → Delta
+# MAGIC # Topico Transacciones Tarjeta
 # MAGIC
 # MAGIC El ambiente se obtiene de la variable `ENVIRONMENT`. El tópico se recibe
 # MAGIC como parámetro para reutilizar el notebook en distintas tareas.
@@ -10,10 +10,11 @@
 import os
 from pathlib import Path
 
-dbutils.widgets.text("topic", "banco.pagos", "Tópico Kafka")
-dbutils.widgets.text("config_path", "", "Ruta de config.yml (opcional)")
+dbutils.widgets.text("topic", "banco.transacciones_tarjeta", "Tópico Kafka")
+dbutils.widgets.text("config_path", "", "kafka_streams/config/config.yml")
 
-environment = os.getenv("ENVIRONMENT", "").strip().lower()
+# environment = os.getenv("ENVIRONMENT", "").strip().lower()
+environment = "dev"
 topic = dbutils.widgets.get("topic").strip()
 config_path_widget = dbutils.widgets.get("config_path").strip()
 
@@ -29,7 +30,8 @@ if not topic:
 
 # COMMAND ----------
 
-# MAGIC %run ../src/kafka_ingestion
+# DBTITLE 1,Carga de módulo de ingesta
+from kafka_streams.src.kafka_ingestion import *
 
 # COMMAND ----------
 
@@ -68,4 +70,3 @@ print(f"Identificador de consulta: {query.id}")
 # Mantiene activa la tarea y propaga los errores del flujo al Job.
 # Con available_now, espera hasta finalizar el lote incremental.
 query.awaitTermination()
-

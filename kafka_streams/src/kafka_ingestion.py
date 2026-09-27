@@ -1,4 +1,3 @@
-# Databricks notebook source
 from copy import deepcopy
 from pathlib import Path
 import re
@@ -245,4 +244,3 @@ def run_ingestion(
     kafka_df = read_kafka(spark, config, dbutils)
     events_df = deserialize_avro(kafka_df, config, dbutils)
     return write_delta(events_df, config)
-

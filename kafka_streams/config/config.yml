@@ -97,6 +97,17 @@ topics:
       type: "processing_time"
       interval: "15 seconds"
 
+  banco.transacciones_tarjeta:
+    enabled: true
+    serialization: "avro"
+    target_table: "banco_transacciones_tarjeta"
+    query_name: "bronze_banco_trx_tarjeta"
+    key_alias: "trx_tarjeta_key"
+    subject: "banco.transacciones_tarjeta-value"
+    max_offsets_per_trigger: 1000
+    trigger:
+      type: "available_now"
+
   # Para agregar un tópico, copiar este bloque y cambiar sus valores.
   # banco.transferencias:
   #   enabled: true
